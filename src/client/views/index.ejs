@@ -1,0 +1,151 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+
+<head> 
+	<meta charset="UTF-8"> 
+	<meta name="viewport" content= 
+		"width=device-width, initial-scale=1.0"> 
+	<title>Pagination Example</title> 
+	 <!-- <link rel="stylesheet" href="css/pagination.css">  -->
+</head> 
+
+<body> 
+    <!-- The Modal -->
+<!-- pop-up dialog box, containing a form -->
+<div class="modal" id="modal">
+  <div class="modal-dialog">
+    <header class="modal-header">
+     Add your next trip
+      <button class="close-modal" aria-label="close modal" data-close="modal">
+        ✕  
+      </button>
+    </header>
+    <div class="modal-content">
+
+
+                   <div>
+  <form id="travelForm" method="post">
+    <label for="city">My trip to </label>
+    <input type="text" id="city" placeholder="Please enter the city" required="required" data-validation-required-message="Please enter your trip destination" >
+
+    <label for="lname">Departing </label>
+    <input type="date" id="departing" placeholder="Date" data-validation-required-message="Please enter a date">
+
+    <input type="submit" value="Submit" id="saveTripButton">
+  </form>
+</div>       
+                                           
+                          </div>
+    <footer class="modal-footer">
+      
+    </footer>
+  </div>
+</div>
+
+	<div id="data-container"> 
+
+	                     	<h1> Travel planner</h1> 
+		                <!-- Blog List Start -->
+
+
+<!-- <a href="#" class="btn btn-secondary btn-lg disabled" role="button" aria-disabled="true">Link</a> -->
+ <!-- <div>
+    <button type="button" class="open-modal" data-open="modal2">
+    Add trip
+  </button>
+</div> -->
+ 	<div class="container"> 
+    <div class="alert danger" id="error">
+  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+  <strong id="error-message">Danger!</strong>
+</div>
+
+<div class="alert success" id="success">
+  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>  
+  <strong id="success-message">Success!</strong>
+</div>  
+    <!-- Trigger/Open The Modal -->
+<%if (trips[0].size === 0) { %>
+ <h3 class="mt-md-4 px-md-3 mb-2 py-2 bg-white font-weight-bold">You have not added any trip</h3>
+<% } %>
+
+   
+  </div>
+	<div id="container" class="container"> 
+    <button type="button" class="open-modal fas fa- fa-plus" data-open="modal">
+    Add trip
+  </button>
+	        <% trips.forEach((trip)=> { %>
+
+	<div class="card">
+	
+			<img src="<%= trip.image_url %>"  alt="Image 1">
+
+		<div class="block">  
+      <br/>                    
+							<div class="d-flex mb-1">
+                           <strong>My trip to:</strong>  <span><%= `${trip.city}` %> , <%= `${trip.country}` %></span>
+                            </div>
+
+							             <div class="d-flex mb-1">
+                           <strong>Departing: </strong> <span> <%= `${trip.departing}` %></span>
+                            </div>
+                             <hr>
+                            <div class="d-flex mb-1">
+                             <strong> <%= `${trip.city}` %> , <%= `${trip.country}` %> is to <%= `${trip.countDown}` %> days away:<span> </span><strong>
+                            </div>
+
+                             <hr>
+                            <div class="d-flex mb-1">
+                             <strong>Typical weather for then is:</strong></strong>
+                           </div>
+                              
+                            <div class="d-flex mb-1">
+                             <small class="mr-2" > High - <%= trip.highTemp %>, Low - <%= trip.lowTemp %> </small>
+                            </div>
+
+                            <div class="d-flex mb-1">
+                             <small class="mr-2" ><%= trip.description %> </small>
+                           </div>
+                           <br/>
+                           
+                            <div class="d-flex mb-1">
+<%if (trips.length > 0) { %>
+   <button type="submit" id="delete<%= trip.id %>" value="delete<%= trip.id %>"  class="fas fa- fa-trash btnDelete"> delete</button>                                 
+<% } %>
+ </div>
+	
+	   </div>
+	</div>
+        <% }) %>
+
+		</div> 
+	</div> 
+
+	<div class="pagination" id="pagination"> 
+		<a href="#" id="prev">Previous</a> 
+
+         <%if (trips.length === 1 || trips.length > 1) { %>
+		    <a href="#" class="page-link" data-page="1">1</a> 
+         <% } %>
+
+          <%if (trips.length === 2 || trips.length > 2) { %>
+		<a href="#" class="page-link" data-page="2">2</a> 
+      <% } %>
+
+          <%if (trips.length === 3 || trips.length > 3) { %>
+		<a href="#" class="page-link" data-page="3">3</a> 
+      <% } %>
+
+		<a href="#" id="next">Next</a> 
+		<p id="page-numbers"> </p> 
+	</div> 
+<script>
+
+  document.addEventListener('DOMContentLoaded', function() {
+
+}, false);
+</script>
+</body>  
+
+</html>
