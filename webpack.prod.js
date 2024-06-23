@@ -11,8 +11,8 @@ module.exports = {
     entry: './src/client/index.js',
     mode: 'production',
     optimization: {
-	minimizer: [new TerserPlugin({}), new OptimizeCSSAssetsPlugin({})],
-	 },
+        minimizer: [new TerserPlugin({}), new OptimizeCSSAssetsPlugin({})],
+    },
     module: {
         rules: [
             {
@@ -23,18 +23,18 @@ module.exports = {
             {
                 test: /\.scss$/,
                 use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
-        }
+            }
         ]
     },
     plugins: [
         new HtmlWebPackPlugin({
-            template: "./src/client/views/index.html",
-            filename: "./index.html",
+            template: "./src/client/views/index.ejs",
+            filename: "./index.ejs",
         }),
-       new WorkboxPlugin.GenerateSW({
+        new WorkboxPlugin.GenerateSW({
             swDest: './dist/sw.js'
         }),
-        new MiniCssExtractPlugin({ filename: "[name].css" })
+        new MiniCssExtractPlugin({filename: "[name].css"})
     ],
     devServer: {
         port: 3000,

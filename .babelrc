@@ -1,12 +1,13 @@
- {
-    "presets": [
-      [
-        "@babel/preset-env",
-        // {
-        //   "targets": {
-        //     "esModule": true
+{
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        //  "targets": {
+        "modules": 'auto'
         //   }
-        // }
-      ]
+      }
     ]
-  }
+  ]
+  //  "plugins": ['@babel/transform-runtime', 'babel-plugin-transform-import-meta']
+}

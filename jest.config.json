@@ -1,8 +1,11 @@
-  {
- "jest": {
+{
+  "jest": {
     "verbose": true
   },
   "scripts": {
     "test": "jest --config=jest.config.json"
   }
+  // "transform": {
+  //   '\\.js$': ['babel-jest', { configFile: './babel-jest.config.js' }]
+  // },
 }

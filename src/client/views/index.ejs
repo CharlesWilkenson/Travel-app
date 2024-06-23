@@ -5,8 +5,8 @@
 	<meta charset="UTF-8"> 
 	<meta name="viewport" content= 
 		"width=device-width, initial-scale=1.0"> 
-	<title>Pagination Example</title> 
-	 <!-- <link rel="stylesheet" href="css/pagination.css">  -->
+	<title>Travel App</title>
+
 </head> 
 
 <body> 
@@ -45,15 +45,7 @@
 	<div id="data-container"> 
 
 	                     	<h1> Travel planner</h1> 
-		                <!-- Blog List Start -->
 
-
-<!-- <a href="#" class="btn btn-secondary btn-lg disabled" role="button" aria-disabled="true">Link</a> -->
- <!-- <div>
-    <button type="button" class="open-modal" data-open="modal2">
-    Add trip
-  </button>
-</div> -->
  	<div class="container"> 
     <div class="alert danger" id="error">
   <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
@@ -92,7 +84,18 @@
                             </div>
                              <hr>
                             <div class="d-flex mb-1">
-                             <strong> <%= `${trip.city}` %> , <%= `${trip.country}` %> is to <%= `${trip.countDown}` %> days away:<span> </span><strong>
+
+                              <%if (trip.countDown > 1) { %>
+                             <strong> <%= `${trip.city}` %> , <%= `${trip.country}` %> is to <%= `${trip.countDown}` %> days away<span> </span><strong></strong>
+                                 <% } %>
+
+                             <%if (trip.countDown == 1) { %>
+                             <strong> <%= `${trip.city}` %> , <%= `${trip.country}` %> is for today<span> </span><strong></strong>
+                                 <% } %>
+                                 
+                             <%if (trip.countDown <= 0) { %>
+                             <strong> <%= `${trip.city}` %> , <%= `${trip.country}` %> has already happend<span> </span><strong></strong>
+                                 <% } %>
                             </div>
 
                              <hr>
@@ -111,7 +114,8 @@
                            
                             <div class="d-flex mb-1">
 <%if (trips.length > 0) { %>
-   <button type="submit" id="delete<%= trip.id %>" value="delete<%= trip.id %>"  class="fas fa- fa-trash btnDelete"> delete</button>                                 
+   <button type="submit" id="delete<%= trip.id %>" value="delete<%= trip.id %>"  class="fas fa- fa-trash btnDelete"> delete</button>     
+                            
 <% } %>
  </div>
 	
@@ -139,13 +143,7 @@
 
 		<a href="#" id="next">Next</a> 
 		<p id="page-numbers"> </p> 
-	</div> 
-<script>
-
-  document.addEventListener('DOMContentLoaded', function() {
-
-}, false);
-</script>
+	</div>
 </body>  
 
 </html>

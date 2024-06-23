@@ -1,70 +1,98 @@
 import dotenv from 'dotenv';
+import fetch from 'node-fetch';
+
 dotenv.config();
+
 const weatherBitBaseURL = "https://api.weatherbit.io/v2.0/forecast/daily";
-const pixabayBaseURL = "https://pixabay.com/api";
+const pixabayBaseURL = "http://pixabay.com/api";
+const geonamesBaseURL = "http://api.geonames.org/searchJSON";
 const WEATHERBIT_API_KEY = process.env.WEATHERBIT_API_KEY;
 const PIXABAY_API_KEY = process.env.PIXABAY_API_KEY;
-export let trip = {};
 
- let getDataFromGeonamesdAPI = (dataFromGeonamesdAPI) => {
-      trip = {
-      "city": dataFromGeonamesdAPI.geonames[0].name,
-      "country": dataFromGeonamesdAPI.geonames[0].countryName,
-      "lng": dataFromGeonamesdAPI.geonames[0].lng,
-      "lat": dataFromGeonamesdAPI.geonames[0].lat
-      }
+let trip = {};
+
+
+let getDataFromGeonamesdAPI = (dataFromGeonamesdAPI) => {
+    trip = {
+        "city": dataFromGeonamesdAPI.city,
+        "country": dataFromGeonamesdAPI.country,
+        "lng": dataFromGeonamesdAPI.lng,
+        "lat": dataFromGeonamesdAPI.lat
+    }
+    return trip;
 }
 
-
- let getWeatherFromWeatherBit = (wheater) => {
-  trip['highTemp'] = wheater.data[0].high_temp;
-  trip['lowTemp'] = wheater.data[0].low_temp;
-  trip['description'] = wheater.data[0].weather.description;
+let getWeatherFromWeatherBit = (wheater) => {
+    trip['highTemp'] = wheater.highTemp;
+    trip['lowTemp'] = wheater.lowTemp;
+    trip['description'] = wheater.description;
+    return trip;
 }
 
+export const callGeonamesAPI = async (city) => {
+    const username = process.env.GEONAME_API_USERNAME;
+    const geonamesURL = `${geonamesBaseURL}?q=${city}&username=${username}&maxRows=1`;
+    try {
+        const response = await fetch(geonamesURL);
+        const newData = await response.json();
 
-export const callGeonamesAPI = async (url='') => { 
-  try {
-           const response = await fetch(url);
-           const newdata = await response.json();
-            getDataFromGeonamesdAPI(newdata);
-            return newdata;
+        let data = {
+            city: city,
+            country: newData.geonames[0].countryName,
+            lng: newData.geonames[0].lng,
+            lat: newData.geonames[0].lat
+        }
+        return getDataFromGeonamesdAPI(data);
     } catch (error) {
         console.log(error);
-     }
+    }
 }
 
 
 export const getWeather = async (data = {}) => {
-  let city = data.geonames[0].name;
-  let country = data.geonames[0].countryName;
-  let lng = data.geonames[0].lng;
-  let lat = data.geonames[0].lat;
+    let city = data.city;
+    let country = data.country;
+    let lng = data.lng;
+    let lat = data.lat;
 
-  let weatherBitURL = `${weatherBitBaseURL}?key=${encodeURIComponent(WEATHERBIT_API_KEY)}&lat=${lat}&lon=${encodeURIComponent(lng)}&city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}`; 
+    let weatherBitURL = `${weatherBitBaseURL}?key=${encodeURIComponent(WEATHERBIT_API_KEY)}&lat=${lat}&lon=${encodeURIComponent(lng)}&city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}`;
 
-  try {
-      const response = await fetch(weatherBitURL);
-    const newdata = await response.json();
-      getWeatherFromWeatherBit(newdata);
-         return newdata;
+    try {
+        const response = await fetch(weatherBitURL);
+        const newData = await response.json();
+
+        let data = {
+            highTemp: newData.data[0].high_temp,
+            lowTemp: newData.data[0].low_temp,
+            description: newData.data[0].weather.description
+        }
+        return getWeatherFromWeatherBit(data);
     } catch (error) {
         console.log(error);
-     }
+    }
 }
 
-export const getImageFromPixabayAPI = async (data={}) => {
-  let city = data.city_name;
-  let URL = `${pixabayBaseURL}?key=${PIXABAY_API_KEY}&q=${encodeURIComponent(city)}&image_type=photo`;
+export const getImageFromPixabayAPI = async (data = {}) => {
 
-  try {
-     const response = await fetch(URL);
-     const newData = await response.json();
-    trip['image_url'] = newData.hits[0].webformatURL;
-    
-    return newData;
-  } catch (err) { 
-    console.log(err);
-  }
+    let city = data.city;
+    let URL = `${pixabayBaseURL}?key=${PIXABAY_API_KEY}&q=${city}&image_type=photo`;
 
+    try {
+        const response = await fetch(URL);
+        const newData = await response.json();
+        trip['image_url'] = newData.hits[0].webformatURL;
+        return trip;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+export const callAPIs = async (city) => {
+    return await callGeonamesAPI(city)
+        .then((data) => {
+            return getWeather(data)
+        })
+        .then((data) => {
+            return getImageFromPixabayAPI(data);
+        });
 }
